@@ -8,7 +8,7 @@ gtfs_catalog <- read_csv("https://bit.ly/catalogs-csv") %>%
 
 
 load_gtfs_from_url <- function(url, destfile) {
-    download.file(url, destfile = destfile)
+    download.file(url, destfile = destfile, mode="wb") ## windows version needs mode defined 
     g <- read_gtfs(destfile)
     file.remove(destfile)
     g
