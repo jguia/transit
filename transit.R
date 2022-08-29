@@ -1,6 +1,9 @@
 library(tidyverse)
 library(tidycensus)
 library(tidytransit)
+options(tigris_use_cache = TRUE)
+
+census_api_key("8bd7df545848f3b6492fa75b84e6281ef42ca70b",TRUE, TRUE)
 
 
 gtfs_catalog <- read_csv("https://bit.ly/catalogs-csv") %>%
@@ -41,3 +44,20 @@ for (i in seq_along(gtfs_catalog)) {
 }
 
 routes <- bind_rows(gs)
+
+## census population data for NY State
+NY <- get_acs(
+  state = "NY",
+  geography = "tract",
+  variables = "B19013_001",
+  geometry = TRUE,
+  year = 2020
+)
+
+## plot it together
+ggplot() +              
+  geom_sf(data = NY, aes(fill = estimate), color = NA) +
+  geom_sf(data = routes$geometry, color = "black") +
+  scale_fill_viridis_c(option = "plasma") 
+          
+
